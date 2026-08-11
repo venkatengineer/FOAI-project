@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <!-- Header -->
@@ -28,14 +30,15 @@
             <section class="card form-card">
                 <h2>Input Observations</h2>
                 <form action="/diagnose" method="POST">
-                    
+
                     <!-- Crop Selection -->
                     <div class="form-group">
                         <label for="crop" class="form-label">Select Target Crop:</label>
                         <select name="crop" id="crop" class="form-select" required>
-                            <option value="" disabled {% if not selected_crop %}selected{% endif %}>-- Select Crop --</option>
+                            <option value="" disabled {% if not selected_crop %}selected{% endif %}>-- Select Crop --
+                            </option>
                             {% for c in crops %}
-                            <option value="{{ c }}" {% if selected_crop == c %}selected{% endif %}>{{ c }}</option>
+                            <option value="{{ c }}" {% if selected_crop==c %}selected{% endif %}>{{ c }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -46,7 +49,8 @@
                         <div class="checkbox-grid">
                             {% for sym in symptoms %}
                             <label class="checkbox-container">
-                                <input type="checkbox" name="{{ sym.id }}" value="yes" {% if selected_facts.get(sym.id) %}checked{% endif %}>
+                                <input type="checkbox" name="{{ sym.id }}" value="yes" {% if selected_facts.get(sym.id)
+                                    %}checked{% endif %}>
                                 <span class="checkmark"></span>
                                 <span class="label-text">{{ sym.label }}</span>
                             </label>
@@ -60,7 +64,8 @@
                         <div class="checkbox-grid">
                             {% for env in environmental_conditions %}
                             <label class="checkbox-container">
-                                <input type="checkbox" name="{{ env.id }}" value="yes" {% if selected_facts.get(env.id) %}checked{% endif %}>
+                                <input type="checkbox" name="{{ env.id }}" value="yes" {% if selected_facts.get(env.id)
+                                    %}checked{% endif %}>
                                 <span class="checkmark"></span>
                                 <span class="label-text">{{ env.label }}</span>
                             </label>
@@ -75,11 +80,12 @@
             <!-- Results Card -->
             <section class="card results-card">
                 <h2>Diagnostic Results</h2>
-                
+
                 {% if result %}
                 <div class="result-body">
                     <!-- Diagnosis Box -->
-                    <div class="diagnosis-box {% if result.disease_key %}status-found{% else %}status-unknown{% endif %}">
+                    <div
+                        class="diagnosis-box {% if result.disease_key %}status-found{% else %}status-unknown{% endif %}">
                         <span class="box-label">DIAGNOSIS RESULT</span>
                         <h3 class="disease-title">{{ result.disease_name }}</h3>
                     </div>
@@ -141,7 +147,8 @@
                 {% else %}
                 <div class="placeholder-state">
                     <div class="placeholder-icon">🌱</div>
-                    <p>Select crop, check symptoms, and click <strong>DIAGNOSE</strong> to execute forward chaining reasoning.</p>
+                    <p>Select crop, check symptoms, and click <strong>DIAGNOSE</strong> to execute forward chaining
+                        reasoning.</p>
                 </div>
                 {% endif %}
             </section>
@@ -152,4 +159,5 @@
         </footer>
     </div>
 </body>
+
 </html>

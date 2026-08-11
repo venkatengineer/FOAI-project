@@ -31,7 +31,7 @@ def load_knowledge_base(api_url=None, api_key=None):
                 kb_data = response.json()
                 if "rules" in kb_data and "diseases" in kb_data:
                     return kb_data, "External API"
-        except Exception as err:
+        except Exception:
             # Silent fallback to local JSON database on network failure/timeout
             pass
 
