@@ -1,0 +1,196 @@
+{
+  "crops": [
+    "Tomato",
+    "Potato",
+    "Rice"
+  ],
+  "symptoms": [
+    {"id": "leaf_spots", "label": "Leaf Spots"},
+    {"id": "spot_color_brown", "label": "Brown Spot Color"},
+    {"id": "spot_color_water_soaked", "label": "Dark / Water-soaked Spots"},
+    {"id": "lower_leaves_affected", "label": "Lower Leaves Affected"},
+    {"id": "powdery_growth", "label": "Powdery / Mold Growth"},
+    {"id": "concentric_rings", "label": "Target-like Concentric Rings"},
+    {"id": "black_stem", "label": "Black / Darkened Stem Base"},
+    {"id": "wilting", "label": "Plant Wilting"},
+    {"id": "lesions", "label": "Leaf Lesions"},
+    {"id": "spindle_spots", "label": "Spindle-shaped Spots"},
+    {"id": "yellow_stripes", "label": "Yellow Wavy Margins / Stripes"}
+  ],
+  "environmental_conditions": [
+    {"id": "humidity_high", "label": "High Humidity / Damp Weather"},
+    {"id": "humidity_low", "label": "Low Humidity / Dry Weather"}
+  ],
+  "diseases": {
+    "tomato_early_blight": {
+      "name": "Tomato Early Blight",
+      "crop": "Tomato",
+      "symptoms_summary": ["Leaf spots", "Brown spots", "Lower leaves affected", "High humidity"],
+      "recommendation": "Remove affected lower leaves immediately. Apply copper-based fungicide and avoid overhead watering to reduce canopy humidity."
+    },
+    "tomato_late_blight": {
+      "name": "Tomato Late Blight",
+      "crop": "Tomato",
+      "symptoms_summary": ["Leaf spots", "Water-soaked lesions", "Powdery/Mold growth", "High humidity"],
+      "recommendation": "Destroy severely infected plants to prevent spore dispersal. Apply recommended protective fungicide (e.g., Mancozeb) and improve air circulation."
+    },
+    "potato_early_blight": {
+      "name": "Potato Early Blight",
+      "crop": "Potato",
+      "symptoms_summary": ["Leaf spots", "Concentric ring lesions", "Lower leaves affected"],
+      "recommendation": "Maintain proper crop rotation (avoid solanaceous crops for 2-3 years). Apply preventive fungicide during warm, humid conditions."
+    },
+    "potato_blackleg": {
+      "name": "Potato Blackleg",
+      "crop": "Potato",
+      "symptoms_summary": ["Blackened stem base", "Wilting", "High humidity"],
+      "recommendation": "Use certified disease-free seed tubers. Avoid planting in waterlogged soils and disinfect handling equipment."
+    },
+    "rice_blast": {
+      "name": "Rice Blast",
+      "crop": "Rice",
+      "symptoms_summary": ["Leaf lesions", "Spindle-shaped spots", "High humidity"],
+      "recommendation": "Avoid excessive nitrogen fertilization. Maintain optimum field water levels and apply systemic triazole-based fungicides if threshold is breached."
+    },
+    "rice_bacterial_leaf_blight": {
+      "name": "Rice Bacterial Leaf Blight",
+      "crop": "Rice",
+      "symptoms_summary": ["Leaf lesions", "Yellow wavy margins", "Wilting"],
+      "recommendation": "Drain field temporarily to reduce bacterial spread. Use resistant varieties and avoid clipping seedling tips during transplanting."
+    }
+  },
+  "rules": [
+    {
+      "id": "R1",
+      "conditions": {"crop": "tomato", "leaf_spots": "yes"},
+      "conclusions": {"tomato_leaf_spots": true},
+      "explanation": "Tomato + Leaf Spots → tomato_leaf_spots"
+    },
+    {
+      "id": "R2",
+      "conditions": {"tomato_leaf_spots": true, "spot_color_brown": "yes"},
+      "conclusions": {"brown_lesions": true},
+      "explanation": "Tomato leaf spots + Brown spot color → brown_lesions"
+    },
+    {
+      "id": "R3",
+      "conditions": {"brown_lesions": true, "lower_leaves_affected": "yes"},
+      "conclusions": {"early_blight_pattern": true},
+      "explanation": "Brown lesions + Lower leaves affected → early_blight_pattern"
+    },
+    {
+      "id": "R4",
+      "conditions": {"early_blight_pattern": true, "humidity_high": "yes"},
+      "conclusions": {"disease": "tomato_early_blight"},
+      "explanation": "Early blight pattern + High humidity → Tomato Early Blight"
+    },
+    {
+      "id": "R5",
+      "conditions": {"tomato_leaf_spots": true, "spot_color_water_soaked": "yes"},
+      "conclusions": {"water_soaked_lesions": true},
+      "explanation": "Tomato leaf spots + Water-soaked spots → water_soaked_lesions"
+    },
+    {
+      "id": "R6",
+      "conditions": {"water_soaked_lesions": true, "powdery_growth": "yes"},
+      "conclusions": {"late_blight_pattern": true},
+      "explanation": "Water-soaked lesions + Mold growth → late_blight_pattern"
+    },
+    {
+      "id": "R7",
+      "conditions": {"late_blight_pattern": true, "humidity_high": "yes"},
+      "conclusions": {"disease": "tomato_late_blight"},
+      "explanation": "Late blight pattern + High humidity → Tomato Late Blight"
+    },
+    {
+      "id": "R8",
+      "conditions": {"crop": "potato", "leaf_spots": "yes"},
+      "conclusions": {"potato_leaf_spots": true},
+      "explanation": "Potato + Leaf Spots → potato_leaf_spots"
+    },
+    {
+      "id": "R9",
+      "conditions": {"potato_leaf_spots": true, "concentric_rings": "yes"},
+      "conclusions": {"potato_ring_lesions": true},
+      "explanation": "Potato leaf spots + Concentric rings → potato_ring_lesions"
+    },
+    {
+      "id": "R10",
+      "conditions": {"potato_ring_lesions": true, "lower_leaves_affected": "yes"},
+      "conclusions": {"potato_early_blight_pattern": true},
+      "explanation": "Potato ring lesions + Lower leaves affected → potato_early_blight_pattern"
+    },
+    {
+      "id": "R11",
+      "conditions": {"potato_early_blight_pattern": true},
+      "conclusions": {"disease": "potato_early_blight"},
+      "explanation": "Potato early blight pattern → Potato Early Blight"
+    },
+    {
+      "id": "R12",
+      "conditions": {"crop": "potato", "black_stem": "yes"},
+      "conclusions": {"potato_stem_blackened": true},
+      "explanation": "Potato + Black stem base → potato_stem_blackened"
+    },
+    {
+      "id": "R13",
+      "conditions": {"potato_stem_blackened": true, "wilting": "yes"},
+      "conclusions": {"blackleg_pattern": true},
+      "explanation": "Potato stem blackened + Wilting → blackleg_pattern"
+    },
+    {
+      "id": "R14",
+      "conditions": {"blackleg_pattern": true, "humidity_high": "yes"},
+      "conclusions": {"disease": "potato_blackleg"},
+      "explanation": "Blackleg pattern + High humidity → Potato Blackleg"
+    },
+    {
+      "id": "R15",
+      "conditions": {"crop": "rice", "lesions": "yes"},
+      "conclusions": {"rice_lesions": true},
+      "explanation": "Rice + Leaf lesions → rice_lesions"
+    },
+    {
+      "id": "R16",
+      "conditions": {"rice_lesions": true, "spindle_spots": "yes"},
+      "conclusions": {"spindle_lesions_present": true},
+      "explanation": "Rice lesions + Spindle-shaped spots → spindle_lesions_present"
+    },
+    {
+      "id": "R17",
+      "conditions": {"spindle_lesions_present": true, "humidity_high": "yes"},
+      "conclusions": {"rice_blast_pattern": true},
+      "explanation": "Spindle lesions present + High humidity → rice_blast_pattern"
+    },
+    {
+      "id": "R18",
+      "conditions": {"rice_blast_pattern": true},
+      "conclusions": {"disease": "rice_blast"},
+      "explanation": "Rice blast pattern → Rice Blast"
+    },
+    {
+      "id": "R19",
+      "conditions": {"crop": "rice", "lesions": "yes"},
+      "conclusions": {"rice_leaf_lesions_alt": true},
+      "explanation": "Rice + Leaf lesions → rice_leaf_lesions_alt"
+    },
+    {
+      "id": "R20",
+      "conditions": {"rice_leaf_lesions_alt": true, "yellow_stripes": "yes"},
+      "conclusions": {"yellow_wavy_lesions": true},
+      "explanation": "Rice lesions + Yellow wavy stripes → yellow_wavy_lesions"
+    },
+    {
+      "id": "R21",
+      "conditions": {"yellow_wavy_lesions": true, "wilting": "yes"},
+      "conclusions": {"bacterial_blight_pattern": true},
+      "explanation": "Yellow wavy lesions + Wilting → bacterial_blight_pattern"
+    },
+    {
+      "id": "R22",
+      "conditions": {"bacterial_blight_pattern": true},
+      "conclusions": {"disease": "rice_bacterial_leaf_blight"},
+      "explanation": "Bacterial blight pattern → Rice Bacterial Leaf Blight"
+    }
+  ]
+}

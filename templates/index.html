@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Disease Expert System - Forward Chaining</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-icon">🌱</div>
+            <div>
+                <h1>CROP DISEASE EXPERT SYSTEM</h1>
+                <p class="subtitle">AI Reasoning Engine using Forward Chaining</p>
+            </div>
+            <div class="kb-badge">
+                <span class="badge-dot"></span>
+                <span>KB Source: <strong>{{ source }}</strong></span>
+            </div>
+        </header>
+
+        <!-- Main Grid Layout -->
+        <div class="main-grid">
+            <!-- Form Card -->
+            <section class="card form-card">
+                <h2>Input Observations</h2>
+                <form action="/diagnose" method="POST">
+                    
+                    <!-- Crop Selection -->
+                    <div class="form-group">
+                        <label for="crop" class="form-label">Select Target Crop:</label>
+                        <select name="crop" id="crop" class="form-select" required>
+                            <option value="" disabled {% if not selected_crop %}selected{% endif %}>-- Select Crop --</option>
+                            {% for c in crops %}
+                            <option value="{{ c }}" {% if selected_crop == c %}selected{% endif %}>{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Symptoms Checklist -->
+                    <div class="form-group">
+                        <label class="form-label">Observed Symptoms:</label>
+                        <div class="checkbox-grid">
+                            {% for sym in symptoms %}
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="{{ sym.id }}" value="yes" {% if selected_facts.get(sym.id) %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                                <span class="label-text">{{ sym.label }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Environmental Conditions -->
+                    <div class="form-group">
+                        <label class="form-label">Environmental Conditions:</label>
+                        <div class="checkbox-grid">
+                            {% for env in environmental_conditions %}
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="{{ env.id }}" value="yes" {% if selected_facts.get(env.id) %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                                <span class="label-text">{{ env.label }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-diagnose">🔍 DIAGNOSE</button>
+                </form>
+            </section>
+
+            <!-- Results Card -->
+            <section class="card results-card">
+                <h2>Diagnostic Results</h2>
+                
+                {% if result %}
+                <div class="result-body">
+                    <!-- Diagnosis Box -->
+                    <div class="diagnosis-box {% if result.disease_key %}status-found{% else %}status-unknown{% endif %}">
+                        <span class="box-label">DIAGNOSIS RESULT</span>
+                        <h3 class="disease-title">{{ result.disease_name }}</h3>
+                    </div>
+
+                    <!-- Symptoms Matched -->
+                    <div class="result-section">
+                        <h4>Matched Symptoms</h4>
+                        {% if result.matched_symptoms %}
+                        <ul class="symptom-tags">
+                            {% for sym in result.matched_symptoms %}
+                            <li class="symptom-tag">✓ {{ sym }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No symptoms matched.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Reasoning Trace (Forward Chaining Steps) -->
+                    <div class="result-section">
+                        <h4>Reasoning Trace (Forward Chaining)</h4>
+                        {% if result.reasoning_trace %}
+                        <div class="trace-timeline">
+                            <div class="trace-step initial-fact">
+                                <div class="step-num">0</div>
+                                <div class="step-content">
+                                    <strong>Initial Working Memory:</strong>
+                                    <code>Crop: {{ selected_crop }}</code>
+                                </div>
+                            </div>
+                            {% for step in result.reasoning_trace %}
+                            <div class="trace-step">
+                                <div class="step-num">{{ loop.index }}</div>
+                                <div class="step-content">
+                                    <span class="rule-badge">{{ step.rule_id }} Fired</span>
+                                    <p class="explanation-text">{{ step.explanation }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="trace-step final-conclusion">
+                                <div class="step-num">✓</div>
+                                <div class="step-content">
+                                    <strong>Final Conclusion:</strong>
+                                    <code>{{ result.disease_name }}</code>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No rules were triggered by the provided inputs.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Recommendation -->
+                    <div class="result-section recommendation-box">
+                        <h4>Actionable Recommendation</h4>
+                        <p>{{ result.recommendation }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="placeholder-state">
+                    <div class="placeholder-icon">🌱</div>
+                    <p>Select crop, check symptoms, and click <strong>DIAGNOSE</strong> to execute forward chaining reasoning.</p>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+
+        <footer class="app-footer">
+            <p>Foundations of AI Mini-Project • Rule-Based Expert System using Forward Chaining</p>
+        </footer>
+    </div>
+</body>
+</html>
