@@ -1,23 +1,33 @@
 """
 Flask Application for Crop Disease Expert System.
+Uses DigiGreen Crop Disease Dataset structured knowledge base.
 """
 
-from flask import Flask, render_template, request, jsonify
-from api_connector import load_knowledge_base
+import json
+import os
+from flask import Flask, render_template, request
 from inference import forward_chaining
 
 app = Flask(__name__)
 
+KB_PATH = os.path.join(os.path.dirname(__file__), "knowledge_base.json")
+
+
+def load_knowledge_base():
+    """Loads the structured local knowledge base directly from JSON."""
+    with open(KB_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 
 @app.route("/", methods=["GET"])
 def index():
-    kb_data, source = load_knowledge_base()
+    kb_data = load_knowledge_base()
     return render_template(
         "index.html",
         crops=kb_data.get("crops", []),
         symptoms=kb_data.get("symptoms", []),
         environmental_conditions=kb_data.get("environmental_conditions", []),
-        source=source,
+        source="DigiGreen Dataset (Hugging Face)",
         result=None,
         selected_crop="",
         selected_facts={}
@@ -26,7 +36,7 @@ def index():
 
 @app.route("/diagnose", methods=["POST"])
 def diagnose():
-    kb_data, source = load_knowledge_base()
+    kb_data = load_knowledge_base()
     
     # Extract form inputs
     selected_crop = request.form.get("crop", "").strip()
@@ -60,7 +70,7 @@ def diagnose():
         crops=kb_data.get("crops", []),
         symptoms=kb_data.get("symptoms", []),
         environmental_conditions=kb_data.get("environmental_conditions", []),
-        source=source,
+        source="DigiGreen Dataset (Hugging Face)",
         result=result,
         selected_crop=selected_crop,
         selected_facts=selected_facts

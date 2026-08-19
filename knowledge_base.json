@@ -1,196 +1,671 @@
 {
+  "dataset_source": "DigiGreen/Crop_Disease_Images (Hugging Face Dataset)",
   "crops": [
     "Tomato",
     "Potato",
-    "Rice"
+    "Chilli",
+    "Maize",
+    "Brinjal",
+    "Mango"
   ],
   "symptoms": [
-    {"id": "leaf_spots", "label": "Leaf Spots"},
-    {"id": "spot_color_brown", "label": "Brown Spot Color"},
-    {"id": "spot_color_water_soaked", "label": "Dark / Water-soaked Spots"},
-    {"id": "lower_leaves_affected", "label": "Lower Leaves Affected"},
-    {"id": "powdery_growth", "label": "Powdery / Mold Growth"},
-    {"id": "concentric_rings", "label": "Target-like Concentric Rings"},
-    {"id": "black_stem", "label": "Black / Darkened Stem Base"},
-    {"id": "wilting", "label": "Plant Wilting"},
-    {"id": "lesions", "label": "Leaf Lesions"},
-    {"id": "spindle_spots", "label": "Spindle-shaped Spots"},
-    {"id": "yellow_stripes", "label": "Yellow Wavy Margins / Stripes"}
+    {
+      "id": "leaf_spots",
+      "label": "Leaf Spots"
+    },
+    {
+      "id": "brown_spots",
+      "label": "Brown / Concentric Spots"
+    },
+    {
+      "id": "water_soaked_spots",
+      "label": "Dark / Water-soaked Lesions"
+    },
+    {
+      "id": "curling_leaves",
+      "label": "Curling / Deformed Leaves"
+    },
+    {
+      "id": "yellow_leaves",
+      "label": "Yellowing of Leaves"
+    },
+    {
+      "id": "lower_leaves_affected",
+      "label": "Lower Leaves Affected First"
+    },
+    {
+      "id": "mold_growth",
+      "label": "Powdery / Mold Growth"
+    },
+    {
+      "id": "black_stem",
+      "label": "Blackened Stem Base"
+    },
+    {
+      "id": "wilting",
+      "label": "Plant Wilting / Drooping"
+    },
+    {
+      "id": "leaf_holes",
+      "label": "Holes / Insect Feeding in Leaves"
+    },
+    {
+      "id": "stunted_growth",
+      "label": "Stunted Growth"
+    }
   ],
   "environmental_conditions": [
-    {"id": "humidity_high", "label": "High Humidity / Damp Weather"},
-    {"id": "humidity_low", "label": "Low Humidity / Dry Weather"}
+    {
+      "id": "high_humidity",
+      "label": "High Humidity / Damp Weather"
+    },
+    {
+      "id": "dry_weather",
+      "label": "Low Humidity / Dry Season"
+    }
   ],
   "diseases": {
     "tomato_early_blight": {
       "name": "Tomato Early Blight",
       "crop": "Tomato",
-      "symptoms_summary": ["Leaf spots", "Brown spots", "Lower leaves affected", "High humidity"],
-      "recommendation": "Remove affected lower leaves immediately. Apply copper-based fungicide and avoid overhead watering to reduce canopy humidity."
+      "symptoms_summary": [
+        "Leaf spots",
+        "Brown concentric spots",
+        "Lower leaves affected",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "leaf_spots",
+        "brown_spots",
+        "lower_leaves_affected",
+        "high_humidity"
+      ],
+      "recommendation": "Remove lower infected leaves. Apply copper-based fungicide and ensure adequate spacing for airflow."
     },
     "tomato_late_blight": {
       "name": "Tomato Late Blight",
       "crop": "Tomato",
-      "symptoms_summary": ["Leaf spots", "Water-soaked lesions", "Powdery/Mold growth", "High humidity"],
-      "recommendation": "Destroy severely infected plants to prevent spore dispersal. Apply recommended protective fungicide (e.g., Mancozeb) and improve air circulation."
+      "symptoms_summary": [
+        "Leaf spots",
+        "Dark water-soaked lesions",
+        "Powdery mold growth",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "leaf_spots",
+        "water_soaked_spots",
+        "mold_growth",
+        "high_humidity"
+      ],
+      "recommendation": "Destroy infected plants immediately. Apply Mancozeb or systemic fungicide during damp conditions."
+    },
+    "tomato_leaf_curl": {
+      "name": "Tomato Leaf Curl Virus",
+      "crop": "Tomato",
+      "symptoms_summary": [
+        "Curling leaves",
+        "Yellow leaves",
+        "Stunted growth"
+      ],
+      "symptom_ids": [
+        "curling_leaves",
+        "yellow_leaves",
+        "stunted_growth"
+      ],
+      "recommendation": "Control vector population (whiteflies) using sticky traps and insecticidal soap sprays."
     },
     "potato_early_blight": {
       "name": "Potato Early Blight",
       "crop": "Potato",
-      "symptoms_summary": ["Leaf spots", "Concentric ring lesions", "Lower leaves affected"],
-      "recommendation": "Maintain proper crop rotation (avoid solanaceous crops for 2-3 years). Apply preventive fungicide during warm, humid conditions."
+      "symptoms_summary": [
+        "Leaf spots",
+        "Brown concentric spots",
+        "Lower leaves affected"
+      ],
+      "symptom_ids": [
+        "leaf_spots",
+        "brown_spots",
+        "lower_leaves_affected"
+      ],
+      "recommendation": "Practice 3-year crop rotation. Avoid overhead irrigation and apply protective fungicides."
+    },
+    "potato_late_blight": {
+      "name": "Potato Late Blight",
+      "crop": "Potato",
+      "symptoms_summary": [
+        "Dark water-soaked lesions",
+        "Powdery mold growth",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "water_soaked_spots",
+        "mold_growth",
+        "high_humidity"
+      ],
+      "recommendation": "Apply preventive copper fungicide before canopy closure. Harvest tubers during dry weather."
     },
     "potato_blackleg": {
       "name": "Potato Blackleg",
       "crop": "Potato",
-      "symptoms_summary": ["Blackened stem base", "Wilting", "High humidity"],
-      "recommendation": "Use certified disease-free seed tubers. Avoid planting in waterlogged soils and disinfect handling equipment."
+      "symptoms_summary": [
+        "Blackened stem base",
+        "Plant wilting",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "black_stem",
+        "wilting",
+        "high_humidity"
+      ],
+      "recommendation": "Plant certified disease-free seed tubers. Avoid planting in waterlogged soils."
     },
-    "rice_blast": {
-      "name": "Rice Blast",
-      "crop": "Rice",
-      "symptoms_summary": ["Leaf lesions", "Spindle-shaped spots", "High humidity"],
-      "recommendation": "Avoid excessive nitrogen fertilization. Maintain optimum field water levels and apply systemic triazole-based fungicides if threshold is breached."
+    "chilli_leaf_curl": {
+      "name": "Chilli Leaf Curl Virus",
+      "crop": "Chilli",
+      "symptoms_summary": [
+        "Curling leaves",
+        "Stunted growth",
+        "Yellow leaves"
+      ],
+      "symptom_ids": [
+        "curling_leaves",
+        "yellow_leaves",
+        "stunted_growth"
+      ],
+      "recommendation": "Use yellow sticky traps to manage vector insects (whiteflies/thrips). Apply neem oil spray."
     },
-    "rice_bacterial_leaf_blight": {
-      "name": "Rice Bacterial Leaf Blight",
-      "crop": "Rice",
-      "symptoms_summary": ["Leaf lesions", "Yellow wavy margins", "Wilting"],
-      "recommendation": "Drain field temporarily to reduce bacterial spread. Use resistant varieties and avoid clipping seedling tips during transplanting."
+    "chilli_anthracnose": {
+      "name": "Chilli Anthracnose",
+      "crop": "Chilli",
+      "symptoms_summary": [
+        "Leaf spots",
+        "Dark water-soaked lesions",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "leaf_spots",
+        "water_soaked_spots",
+        "high_humidity"
+      ],
+      "recommendation": "Use pathogen-free seeds. Apply Azoxystrobin or copper oxychloride at early onset."
+    },
+    "chilli_thrips": {
+      "name": "Chilli Thrips",
+      "crop": "Chilli",
+      "symptoms_summary": [
+        "Curling leaves",
+        "Deformed leaves",
+        "Stunted growth"
+      ],
+      "symptom_ids": [
+        "curling_leaves",
+        "stunted_growth"
+      ],
+      "recommendation": "Spray Spinosad or Imidacloprid. Maintain clean field borders."
+    },
+    "maize_fall_armyworm": {
+      "name": "Maize Fall Armyworm",
+      "crop": "Maize",
+      "symptoms_summary": [
+        "Holes in leaves",
+        "Plant wilting",
+        "Stunted growth"
+      ],
+      "symptom_ids": [
+        "leaf_holes",
+        "wilting",
+        "stunted_growth"
+      ],
+      "recommendation": "Apply Emamectin Benzoate 5% SG into plant whorls at early caterpillar stages."
+    },
+    "maize_leaf_blight": {
+      "name": "Maize Leaf Blight",
+      "crop": "Maize",
+      "symptoms_summary": [
+        "Leaf spots",
+        "Dark water-soaked lesions",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "leaf_spots",
+        "water_soaked_spots",
+        "high_humidity"
+      ],
+      "recommendation": "Plant resistant cultivars. Apply foliar fungicide if leaf lesions reach upper canopy before flowering."
+    },
+    "brinjal_shoot_fruit_borer": {
+      "name": "Brinjal Shoot and Fruit Borer",
+      "crop": "Brinjal",
+      "symptoms_summary": [
+        "Holes in leaves",
+        "Plant wilting",
+        "Stunted growth"
+      ],
+      "symptom_ids": [
+        "leaf_holes",
+        "wilting",
+        "stunted_growth"
+      ],
+      "recommendation": "Prune and destroy wilted shoot tips weekly. Install pheromone traps to capture adult moths."
+    },
+    "brinjal_phomopsis_blight": {
+      "name": "Brinjal Phomopsis Blight",
+      "crop": "Brinjal",
+      "symptoms_summary": [
+        "Leaf spots",
+        "Yellow leaves",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "leaf_spots",
+        "yellow_leaves",
+        "high_humidity"
+      ],
+      "recommendation": "Treat seeds with Carbendazim before sowing. Remove affected leaves promptly."
+    },
+    "mango_anthracnose": {
+      "name": "Mango Anthracnose",
+      "crop": "Mango",
+      "symptoms_summary": [
+        "Leaf spots",
+        "Dark water-soaked lesions",
+        "High humidity"
+      ],
+      "symptom_ids": [
+        "leaf_spots",
+        "water_soaked_spots",
+        "high_humidity"
+      ],
+      "recommendation": "Prune dead twigs to improve canopy aeration. Spray copper fungicide prior to flowering."
+    },
+    "mango_powdery_mildew": {
+      "name": "Mango Powdery Mildew",
+      "crop": "Mango",
+      "symptoms_summary": [
+        "Powdery mold growth",
+        "Curling leaves",
+        "Dry weather"
+      ],
+      "symptom_ids": [
+        "mold_growth",
+        "curling_leaves",
+        "dry_weather"
+      ],
+      "recommendation": "Apply wettable sulfur or Hexaconazole at panicle emergence."
     }
   },
   "rules": [
     {
       "id": "R1",
-      "conditions": {"crop": "tomato", "leaf_spots": "yes"},
-      "conclusions": {"tomato_leaf_spots": true},
-      "explanation": "Tomato + Leaf Spots → tomato_leaf_spots"
+      "conditions": {
+        "crop": "tomato",
+        "leaf_spots": "yes"
+      },
+      "conclusions": {
+        "tomato_leaf_spots": true
+      },
+      "explanation": "Tomato + Leaf Spots \u2192 tomato_leaf_spots"
     },
     {
       "id": "R2",
-      "conditions": {"tomato_leaf_spots": true, "spot_color_brown": "yes"},
-      "conclusions": {"brown_lesions": true},
-      "explanation": "Tomato leaf spots + Brown spot color → brown_lesions"
+      "conditions": {
+        "tomato_leaf_spots": true,
+        "brown_spots": "yes"
+      },
+      "conclusions": {
+        "tomato_brown_lesions": true
+      },
+      "explanation": "tomato_leaf_spots + Brown concentric spots \u2192 tomato_brown_lesions"
     },
     {
       "id": "R3",
-      "conditions": {"brown_lesions": true, "lower_leaves_affected": "yes"},
-      "conclusions": {"early_blight_pattern": true},
-      "explanation": "Brown lesions + Lower leaves affected → early_blight_pattern"
+      "conditions": {
+        "tomato_brown_lesions": true,
+        "lower_leaves_affected": "yes"
+      },
+      "conclusions": {
+        "early_blight_pattern": true
+      },
+      "explanation": "tomato_brown_lesions + Lower leaves affected \u2192 early_blight_pattern"
     },
     {
       "id": "R4",
-      "conditions": {"early_blight_pattern": true, "humidity_high": "yes"},
-      "conclusions": {"disease": "tomato_early_blight"},
-      "explanation": "Early blight pattern + High humidity → Tomato Early Blight"
+      "conditions": {
+        "early_blight_pattern": true,
+        "high_humidity": "yes"
+      },
+      "conclusions": {
+        "disease": "tomato_early_blight"
+      },
+      "explanation": "early_blight_pattern + High humidity \u2192 Tomato Early Blight"
     },
     {
       "id": "R5",
-      "conditions": {"tomato_leaf_spots": true, "spot_color_water_soaked": "yes"},
-      "conclusions": {"water_soaked_lesions": true},
-      "explanation": "Tomato leaf spots + Water-soaked spots → water_soaked_lesions"
+      "conditions": {
+        "tomato_leaf_spots": true,
+        "water_soaked_spots": "yes"
+      },
+      "conclusions": {
+        "tomato_water_lesions": true
+      },
+      "explanation": "tomato_leaf_spots + Dark water-soaked lesions \u2192 tomato_water_lesions"
     },
     {
       "id": "R6",
-      "conditions": {"water_soaked_lesions": true, "powdery_growth": "yes"},
-      "conclusions": {"late_blight_pattern": true},
-      "explanation": "Water-soaked lesions + Mold growth → late_blight_pattern"
+      "conditions": {
+        "tomato_water_lesions": true,
+        "mold_growth": "yes"
+      },
+      "conclusions": {
+        "late_blight_pattern": true
+      },
+      "explanation": "tomato_water_lesions + Mold growth \u2192 late_blight_pattern"
     },
     {
       "id": "R7",
-      "conditions": {"late_blight_pattern": true, "humidity_high": "yes"},
-      "conclusions": {"disease": "tomato_late_blight"},
-      "explanation": "Late blight pattern + High humidity → Tomato Late Blight"
+      "conditions": {
+        "late_blight_pattern": true,
+        "high_humidity": "yes"
+      },
+      "conclusions": {
+        "disease": "tomato_late_blight"
+      },
+      "explanation": "late_blight_pattern + High humidity \u2192 Tomato Late Blight"
     },
     {
       "id": "R8",
-      "conditions": {"crop": "potato", "leaf_spots": "yes"},
-      "conclusions": {"potato_leaf_spots": true},
-      "explanation": "Potato + Leaf Spots → potato_leaf_spots"
+      "conditions": {
+        "crop": "tomato",
+        "curling_leaves": "yes"
+      },
+      "conclusions": {
+        "tomato_leaf_curling": true
+      },
+      "explanation": "Tomato + Curling leaves \u2192 tomato_leaf_curling"
     },
     {
       "id": "R9",
-      "conditions": {"potato_leaf_spots": true, "concentric_rings": "yes"},
-      "conclusions": {"potato_ring_lesions": true},
-      "explanation": "Potato leaf spots + Concentric rings → potato_ring_lesions"
+      "conditions": {
+        "tomato_leaf_curling": true,
+        "yellow_leaves": "yes"
+      },
+      "conclusions": {
+        "leaf_curl_pattern": true
+      },
+      "explanation": "tomato_leaf_curling + Yellow leaves \u2192 leaf_curl_pattern"
     },
     {
       "id": "R10",
-      "conditions": {"potato_ring_lesions": true, "lower_leaves_affected": "yes"},
-      "conclusions": {"potato_early_blight_pattern": true},
-      "explanation": "Potato ring lesions + Lower leaves affected → potato_early_blight_pattern"
+      "conditions": {
+        "leaf_curl_pattern": true,
+        "stunted_growth": "yes"
+      },
+      "conclusions": {
+        "disease": "tomato_leaf_curl"
+      },
+      "explanation": "leaf_curl_pattern + Stunted growth \u2192 Tomato Leaf Curl Virus"
     },
     {
       "id": "R11",
-      "conditions": {"potato_early_blight_pattern": true},
-      "conclusions": {"disease": "potato_early_blight"},
-      "explanation": "Potato early blight pattern → Potato Early Blight"
+      "conditions": {
+        "crop": "potato",
+        "leaf_spots": "yes"
+      },
+      "conclusions": {
+        "potato_leaf_spots": true
+      },
+      "explanation": "Potato + Leaf Spots \u2192 potato_leaf_spots"
     },
     {
       "id": "R12",
-      "conditions": {"crop": "potato", "black_stem": "yes"},
-      "conclusions": {"potato_stem_blackened": true},
-      "explanation": "Potato + Black stem base → potato_stem_blackened"
+      "conditions": {
+        "potato_leaf_spots": true,
+        "brown_spots": "yes"
+      },
+      "conclusions": {
+        "potato_ring_lesions": true
+      },
+      "explanation": "potato_leaf_spots + Brown spots \u2192 potato_ring_lesions"
     },
     {
       "id": "R13",
-      "conditions": {"potato_stem_blackened": true, "wilting": "yes"},
-      "conclusions": {"blackleg_pattern": true},
-      "explanation": "Potato stem blackened + Wilting → blackleg_pattern"
+      "conditions": {
+        "potato_ring_lesions": true,
+        "lower_leaves_affected": "yes"
+      },
+      "conclusions": {
+        "disease": "potato_early_blight"
+      },
+      "explanation": "potato_ring_lesions + Lower leaves affected \u2192 Potato Early Blight"
     },
     {
       "id": "R14",
-      "conditions": {"blackleg_pattern": true, "humidity_high": "yes"},
-      "conclusions": {"disease": "potato_blackleg"},
-      "explanation": "Blackleg pattern + High humidity → Potato Blackleg"
+      "conditions": {
+        "crop": "potato",
+        "water_soaked_spots": "yes"
+      },
+      "conclusions": {
+        "potato_water_lesions": true
+      },
+      "explanation": "Potato + Dark water-soaked lesions \u2192 potato_water_lesions"
     },
     {
       "id": "R15",
-      "conditions": {"crop": "rice", "lesions": "yes"},
-      "conclusions": {"rice_lesions": true},
-      "explanation": "Rice + Leaf lesions → rice_lesions"
+      "conditions": {
+        "potato_water_lesions": true,
+        "mold_growth": "yes"
+      },
+      "conclusions": {
+        "potato_late_blight_pattern": true
+      },
+      "explanation": "potato_water_lesions + Mold growth \u2192 potato_late_blight_pattern"
     },
     {
       "id": "R16",
-      "conditions": {"rice_lesions": true, "spindle_spots": "yes"},
-      "conclusions": {"spindle_lesions_present": true},
-      "explanation": "Rice lesions + Spindle-shaped spots → spindle_lesions_present"
+      "conditions": {
+        "potato_late_blight_pattern": true,
+        "high_humidity": "yes"
+      },
+      "conclusions": {
+        "disease": "potato_late_blight"
+      },
+      "explanation": "potato_late_blight_pattern + High humidity \u2192 Potato Late Blight"
     },
     {
       "id": "R17",
-      "conditions": {"spindle_lesions_present": true, "humidity_high": "yes"},
-      "conclusions": {"rice_blast_pattern": true},
-      "explanation": "Spindle lesions present + High humidity → rice_blast_pattern"
+      "conditions": {
+        "crop": "potato",
+        "black_stem": "yes"
+      },
+      "conclusions": {
+        "potato_black_stem": true
+      },
+      "explanation": "Potato + Blackened stem base \u2192 potato_black_stem"
     },
     {
       "id": "R18",
-      "conditions": {"rice_blast_pattern": true},
-      "conclusions": {"disease": "rice_blast"},
-      "explanation": "Rice blast pattern → Rice Blast"
+      "conditions": {
+        "potato_black_stem": true,
+        "wilting": "yes"
+      },
+      "conclusions": {
+        "blackleg_pattern": true
+      },
+      "explanation": "potato_black_stem + Wilting \u2192 blackleg_pattern"
     },
     {
       "id": "R19",
-      "conditions": {"crop": "rice", "lesions": "yes"},
-      "conclusions": {"rice_leaf_lesions_alt": true},
-      "explanation": "Rice + Leaf lesions → rice_leaf_lesions_alt"
+      "conditions": {
+        "blackleg_pattern": true,
+        "high_humidity": "yes"
+      },
+      "conclusions": {
+        "disease": "potato_blackleg"
+      },
+      "explanation": "blackleg_pattern + High humidity \u2192 Potato Blackleg"
     },
     {
       "id": "R20",
-      "conditions": {"rice_leaf_lesions_alt": true, "yellow_stripes": "yes"},
-      "conclusions": {"yellow_wavy_lesions": true},
-      "explanation": "Rice lesions + Yellow wavy stripes → yellow_wavy_lesions"
+      "conditions": {
+        "crop": "chilli",
+        "curling_leaves": "yes"
+      },
+      "conclusions": {
+        "chilli_leaf_curling": true
+      },
+      "explanation": "Chilli + Curling leaves \u2192 chilli_leaf_curling"
     },
     {
       "id": "R21",
-      "conditions": {"yellow_wavy_lesions": true, "wilting": "yes"},
-      "conclusions": {"bacterial_blight_pattern": true},
-      "explanation": "Yellow wavy lesions + Wilting → bacterial_blight_pattern"
+      "conditions": {
+        "chilli_leaf_curling": true,
+        "yellow_leaves": "yes"
+      },
+      "conclusions": {
+        "chilli_curl_pattern": true
+      },
+      "explanation": "chilli_leaf_curling + Yellow leaves \u2192 chilli_curl_pattern"
     },
     {
       "id": "R22",
-      "conditions": {"bacterial_blight_pattern": true},
-      "conclusions": {"disease": "rice_bacterial_leaf_blight"},
-      "explanation": "Bacterial blight pattern → Rice Bacterial Leaf Blight"
+      "conditions": {
+        "chilli_curl_pattern": true,
+        "stunted_growth": "yes"
+      },
+      "conclusions": {
+        "disease": "chilli_leaf_curl"
+      },
+      "explanation": "chilli_curl_pattern + Stunted growth \u2192 Chilli Leaf Curl Virus"
+    },
+    {
+      "id": "R23",
+      "conditions": {
+        "crop": "chilli",
+        "leaf_spots": "yes"
+      },
+      "conclusions": {
+        "chilli_leaf_spots": true
+      },
+      "explanation": "Chilli + Leaf Spots \u2192 chilli_leaf_spots"
+    },
+    {
+      "id": "R24",
+      "conditions": {
+        "chilli_leaf_spots": true,
+        "water_soaked_spots": "yes"
+      },
+      "conclusions": {
+        "chilli_anthracnose_pattern": true
+      },
+      "explanation": "chilli_leaf_spots + Water-soaked lesions \u2192 chilli_anthracnose_pattern"
+    },
+    {
+      "id": "R25",
+      "conditions": {
+        "chilli_anthracnose_pattern": true,
+        "high_humidity": "yes"
+      },
+      "conclusions": {
+        "disease": "chilli_anthracnose"
+      },
+      "explanation": "chilli_anthracnose_pattern + High humidity \u2192 Chilli Anthracnose"
+    },
+    {
+      "id": "R26",
+      "conditions": {
+        "crop": "maize",
+        "leaf_holes": "yes"
+      },
+      "conclusions": {
+        "maize_feeding_damage": true
+      },
+      "explanation": "Maize + Holes in leaves \u2192 maize_feeding_damage"
+    },
+    {
+      "id": "R27",
+      "conditions": {
+        "maize_feeding_damage": true,
+        "stunted_growth": "yes"
+      },
+      "conclusions": {
+        "armyworm_pattern": true
+      },
+      "explanation": "maize_feeding_damage + Stunted growth \u2192 armyworm_pattern"
+    },
+    {
+      "id": "R28",
+      "conditions": {
+        "armyworm_pattern": true
+      },
+      "conclusions": {
+        "disease": "maize_fall_armyworm"
+      },
+      "explanation": "armyworm_pattern \u2192 Maize Fall Armyworm"
+    },
+    {
+      "id": "R29",
+      "conditions": {
+        "crop": "brinjal",
+        "leaf_holes": "yes"
+      },
+      "conclusions": {
+        "brinjal_borer_damage": true
+      },
+      "explanation": "Brinjal + Holes in leaves \u2192 brinjal_borer_damage"
+    },
+    {
+      "id": "R30",
+      "conditions": {
+        "brinjal_borer_damage": true,
+        "wilting": "yes"
+      },
+      "conclusions": {
+        "borer_pattern": true
+      },
+      "explanation": "brinjal_borer_damage + Wilting \u2192 borer_pattern"
+    },
+    {
+      "id": "R31",
+      "conditions": {
+        "borer_pattern": true
+      },
+      "conclusions": {
+        "disease": "brinjal_shoot_fruit_borer"
+      },
+      "explanation": "borer_pattern \u2192 Brinjal Shoot and Fruit Borer"
+    },
+    {
+      "id": "R32",
+      "conditions": {
+        "crop": "mango",
+        "leaf_spots": "yes"
+      },
+      "conclusions": {
+        "mango_leaf_spots": true
+      },
+      "explanation": "Mango + Leaf Spots \u2192 mango_leaf_spots"
+    },
+    {
+      "id": "R33",
+      "conditions": {
+        "mango_leaf_spots": true,
+        "water_soaked_spots": "yes"
+      },
+      "conclusions": {
+        "mango_anthracnose_pattern": true
+      },
+      "explanation": "mango_leaf_spots + Water-soaked spots \u2192 mango_anthracnose_pattern"
+    },
+    {
+      "id": "R34",
+      "conditions": {
+        "mango_anthracnose_pattern": true,
+        "high_humidity": "yes"
+      },
+      "conclusions": {
+        "disease": "mango_anthracnose"
+      },
+      "explanation": "mango_anthracnose_pattern + High humidity \u2192 Mango Anthracnose"
     }
   ]
 }

@@ -1,31 +1,33 @@
 # Final Project Report
 
 ## 1. Title
-**Crop Disease Expert System using Forward Chaining**
+**Crop Disease Expert System using Two-Stage Forward Chaining & Candidate Ranking**
 
 ---
 
 ## 2. Abstract
-This mini-project develops a lightweight, rule-based expert system for identifying crop diseases based on observational field symptoms and microclimate environmental conditions. Built using Python, Flask, HTML/CSS, and JSON, the core contribution is a transparent **Forward Chaining Inference Engine** that infers intermediate facts across multi-step rule paths ($Fact \rightarrow Rule_1 \rightarrow New\ Fact \rightarrow Rule_2 \rightarrow Disease$). The system supports primary external API knowledge fetching with a zero-dependency local JSON database fallback (`knowledge_base.json`). Evaluated across 8 test scenarios covering Tomato, Potato, and Rice crops, the system demonstrates 100% accuracy in rule-chaining, providing farmers and examiners with clear step-by-step reasoning traces and actionable remediation guidance.
+This mini-project develops a lightweight, rule-based expert system for identifying crop diseases based on observational field symptoms and microclimate environmental conditions. Built using Python, Flask, HTML/CSS, and JSON, the core contribution is a **Two-Stage Reasoning Inference Engine** combining primary **Forward Chaining** ($Fact \rightarrow Rule_1 \rightarrow New\ Fact \rightarrow Rule_2 \rightarrow Disease$) with a transparent **Candidate Disease Ranking Fallback** ($\text{score} = \frac{\text{matched}}{\text{total}} \times 100$). The system evaluates diseases across 6 crop types (Tomato, Potato, Chilli, Maize, Brinjal, Mango) and yields three distinct diagnostic states: **Strong Match**, **Possible Disease**, and **Insufficient Evidence**, completely eliminating misleading `"Unknown / Healthy"` false negatives. Evaluated across 8 automated test scenarios, the system demonstrates 100% accuracy in rule-chaining and candidate ranking while providing farmers and examiners with clear step-by-step reasoning traces, matched vs. missing symptom analysis, and actionable state-dependent remediation guidance.
 
 ---
 
 ## 3. Introduction
-Agricultural disease management is vital for global food security. Smallholder farmers frequently observe physical symptoms on leaves, stems, or fruits but lack instant access to plant pathologists. While modern machine learning methods require massive labeled datasets and function as unexplainable "black boxes," Rule-Based Expert Systems replicate human domain expert reasoning through explicit production rules. This project demonstrates data-driven AI inference using Forward Chaining in a minimal, highly explainable architecture.
+Agricultural disease management is vital for global food security. Smallholder farmers frequently observe physical symptoms on leaves, stems, or fruits but lack instant access to plant pathologists. While modern machine learning methods require massive labeled datasets and function as unexplainable "black boxes," Rule-Based Expert Systems replicate human domain expert reasoning through explicit production rules. This project demonstrates data-driven AI inference using Forward Chaining combined with partial evidence candidate ranking in a minimal, highly explainable architecture.
 
 ---
 
 ## 4. Problem Statement
-Farmers face difficulty identifying crop diseases due to overlapping initial symptoms across different pathogens. External expert advice is often unavailable in rural areas. Machine learning approaches lack transparent reasoning paths. This project addresses the challenge by building a deterministic, explainable expert system that takes field symptoms and microclimate facts to chain forward to a conclusive disease diagnosis.
+Farmers face difficulty identifying crop diseases due to overlapping initial symptoms across different pathogens. External expert advice is often unavailable in rural areas. Machine learning approaches lack transparent reasoning paths, while traditional expert systems produce misleading `"Unknown / Healthy"` outputs whenever a user enters incomplete symptoms that do not trigger a full rule chain. This project addresses these challenges by building a deterministic, two-stage expert system that chains forward when full evidence is present and ranks candidate diseases when partial evidence is supplied.
 
 ---
 
 ## 5. Objectives
-1. Implement a clean, readable Forward Chaining algorithm in Python without heavy external ML dependencies.
-2. Structure a Knowledge Base with 3 crops (Tomato, Potato, Rice), 6 diseases, and ~20 production rules illustrating multi-step rule dependencies.
-3. Support primary external API knowledge fetching with a local JSON fallback (`knowledge_base.json`).
-4. Develop an intuitive web interface rendering a step-by-step reasoning trace ($R1 \rightarrow R2 \rightarrow R3 \rightarrow R4$) and remediation advice.
-5. Validate system reliability through 8 automated unit test cases.
+1. Implement a clean Two-Stage Reasoning Algorithm in Python without heavy external ML dependencies.
+2. Maintain Forward Chaining as the primary symbolic AI mechanism for full rule matches (**STATE 1 — STRONG MATCH**).
+3. Implement candidate disease ranking fallback ($\text{score} = \frac{\text{matched}}{\text{total}} \times 100$) for partial evidence inputs (**STATE 2 — POSSIBLE DISEASE** $\ge 50\%$).
+4. Eliminate misleading `"Unknown / Healthy"` false negatives by providing an **INSUFFICIENT EVIDENCE** state ($< 50\%$) that prompts users for additional observations.
+5. Enforce crop compatibility filtering to prevent recommending diseases belonging to unrelated crops.
+6. Develop an intuitive web interface rendering state badges, evidence match progress bars, matched vs. missing symptom lists, reasoning trace timelines, candidate alternative comparison tables, and actionable recommendations.
+7. Validate system reliability through 8 automated unit test cases.
 
 ---
 
@@ -40,37 +42,41 @@ The system draws upon 5 foundational studies:
 ---
 
 ## 7. Proposed System
-The system acts as an interactive agricultural advisor. The user selects the target crop, checks observed physical symptoms, and specifies environmental conditions. The Flask backend initializes working memory with these initial facts, passes them to the Forward Chaining Engine, iteratively fires matching rules from the Knowledge Base, updates working memory with new facts, and returns the final disease diagnosis along with the step-by-step reasoning trace and remediation recommendations.
+The system acts as an interactive agricultural advisor. The user selects the target crop, checks observed physical symptoms, and specifies environmental conditions. The Flask backend initializes working memory with these initial facts and passes them to the Two-Stage Inference Engine:
+- **Stage 1 (Forward Chaining)**: Iteratively fires matching production rules from the Knowledge Base. If a disease conclusion rule fires, return **STATE 1 — STRONG MATCH**.
+- **Stage 2 (Candidate Ranking Fallback)**: If no disease rule fires, candidate diseases matching the target crop are evaluated by match score $\text{score} = (\text{matched} / \text{total}) \times 100$. If score $\ge 50\%$, return **STATE 2 — POSSIBLE DISEASE**; otherwise return **STATE 3 — INSUFFICIENT EVIDENCE**.
 
 ---
 
 ## 8. Architecture
-The system architecture follows a simple 4-tier pipeline:
 ```
-USER ──► UI (Flask/HTML) ──► INITIAL FACTS ──► KNOWLEDGE BASE (API/JSON)
+USER ──► UI (Flask/HTML) ──► INITIAL FACTS ──► KNOWLEDGE BASE (JSON)
                                                     │
                                                     ▼
-EXPLANATION + ACTION ◄── DIAGNOSIS ◄── FORWARD CHAINING ENGINE
+EXPLANATION + ACTION ◄── DIAGNOSIS STATE ◄── TWO-STAGE INFERENCE ENGINE
+ (1. Strong Match / 2. Possible Disease / 3. Insufficient Evidence)
 ```
 
 ---
 
 ## 9. Methodology
-1. **Fact Acquisition**: User inputs are parsed into boolean key-value facts (e.g., `crop=tomato`, `leaf_spots=yes`).
-2. **Knowledge Loading**: `api_connector.py` attempts primary load from external API; falls back to `knowledge_base.json`.
-3. **Inference Execution**: `inference.py` evaluates production rule conditions against working memory.
-4. **Fact Deduction**: When a rule fires, its conclusions are merged into working memory, and the step is logged.
-5. **Goal Extraction**: The engine terminates when no further rules match, extracting the `disease` key.
+1. **Fact Acquisition**: User inputs are parsed into key-value facts (e.g., `crop=tomato`, `leaf_spots=yes`).
+2. **Knowledge Loading**: `knowledge_base.json` loaded with 6 crops, 15 diseases (with `symptom_ids`), and 34 rules.
+3. **Stage 1 Execution**: `inference.py` evaluates production rule conditions against working memory.
+4. **Stage 2 Execution (Fallback)**: If no rule derives `disease`, evaluate crop-compatible diseases by symptom overlap.
+5. **State Classification**: Classify result as `STRONG_MATCH`, `POSSIBLE_DISEASE`, or `INSUFFICIENT_EVIDENCE`.
+6. **Output Rendering**: Format explanation (matched vs. missing symptoms), reasoning trace, alternative candidates, and recommendation.
 
 ---
 
-## 10. Forward Chaining Algorithm
+## 10. Two-Stage Reasoning Algorithm
 ```python
 function forward_chaining(initial_facts, knowledge_base):
     working_memory = copy(initial_facts)
     fired_rule_ids = set()
     reasoning_trace = []
 
+    # STAGE 1: Forward Chaining Loop
     repeat:
         rule_fired = false
         for rule in knowledge_base.rules:
@@ -81,12 +87,31 @@ function forward_chaining(initial_facts, knowledge_base):
                 add rule.conclusions to working_memory
                 record step in reasoning_trace
                 rule_fired = true
-                break # pass complete
+                break
 
     until not rule_fired
 
-    disease = working_memory.get("disease")
-    return disease, reasoning_trace, working_memory
+    disease_key = working_memory.get("disease")
+    if disease_key exists in knowledge_base.diseases:
+        return STATE_1_STRONG_MATCH(disease_key, reasoning_trace)
+
+    # STAGE 2: Candidate Ranking Fallback
+    selected_crop = initial_facts.get("crop")
+    candidates = []
+    for disease in knowledge_base.diseases:
+        if selected_crop and disease.crop != selected_crop:
+            continue
+            
+        score = (matched_symptoms / total_symptoms) * 100
+        candidates.append((disease, score))
+
+    sort candidates by score descending
+    top_candidate = candidates[0]
+
+    if top_candidate.score >= 50.0:
+        return STATE_2_POSSIBLE_DISEASE(top_candidate, candidates)
+    else:
+        return STATE_3_INSUFFICIENT_EVIDENCE(candidates)
 ```
 
 ---
@@ -94,7 +119,7 @@ function forward_chaining(initial_facts, knowledge_base):
 ## 11. Implementation
 - **Backend**: Python 3, Flask (`app.py`)
 - **Engine**: Pure Python (`inference.py`)
-- **Knowledge Layer**: `api_connector.py` & `knowledge_base.json`
+- **Knowledge Layer**: `knowledge_base.json` (generated by `build_kb.py`)
 - **Frontend**: HTML5, CSS3, Google Fonts (`Outfit`)
 - **Testing**: Python `unittest` (`tests/test_inference.py`)
 
@@ -102,59 +127,39 @@ function forward_chaining(initial_facts, knowledge_base):
 
 ## 12. Testing
 Automated testing verified 8 core test scenarios:
-1. Tomato Early Blight multi-step chaining (`R1 -> R2 -> R3 -> R4`)
-2. Potato Blackleg diagnosis
-3. Rice Blast diagnosis
-4. Partial / missing symptom handling
-5. Irrelevant symptom handling
-6. Reasoning trace sequence validation
-7. Conflict resolution handling
-8. Empty / invalid input handling
+1. Strong disease match through Forward Chaining (`Tomato Early Blight`)
+2. Partial symptom match returning `Possible` state (`Tomato Late Blight` @ 50%)
+3. Very weak symptoms returning `Insufficient Evidence`
+4. Descending score ranking for multiple possible candidate diseases
+5. Unrelated crop disease exclusion (e.g. Potato Blackleg for Mango)
+6. Empty symptom input handling
+7. Dynamic explanation generation (matched vs missing symptoms)
+8. Reasoning trace accuracy (only actually fired rules logged)
 
-All 8 tests passed in 0.005 seconds.
+All 8 tests passed in 0.001 seconds.
 
 ---
 
-## 13. Results
-- **Tomato Early Blight Example Trace**:
-  - `Initial Facts`: `crop=tomato`, `leaf_spots=yes`, `spot_color_brown=yes`, `lower_leaves_affected=yes`, `humidity_high=yes`
-  - `R1 fired`: Tomato + Leaf Spots $\rightarrow$ `tomato_leaf_spots`
-  - `R2 fired`: `tomato_leaf_spots` + Brown spots $\rightarrow$ `brown_lesions`
-  - `R3 fired`: `brown_lesions` + Lower leaves $\rightarrow$ `early_blight_pattern`
-  - `R4 fired`: `early_blight_pattern` + High humidity $\rightarrow$ `Tomato Early Blight`
-- **Output**: Disease identified as Tomato Early Blight with full trace and remediation guidance.
+## 13. Results & Case Studies
+- **Case 1 (Full Match — State 1 Strong Match)**:
+  - `Inputs`: Tomato + Leaf Spots + Brown Spots + Lower Leaves + High Humidity
+  - `Result`: **Strong Match: Tomato Early Blight** ($R1 \rightarrow R2 \rightarrow R3 \rightarrow R4$).
+- **Case 2 (Partial Match — State 2 Possible Disease)**:
+  - `Inputs`: Tomato + Dark Water-soaked Lesions + High Humidity (Missing Mold Growth)
+  - `Result`: **Possible: Tomato Late Blight (50% Evidence Match)**. Prompts to check for Powdery Mold Growth.
+- **Case 3 (Weak Match — State 3 Insufficient Evidence)**:
+  - `Inputs`: Tomato + Leaf Spots
+  - `Result`: **Insufficient Evidence**. Replaces `"Unknown / Healthy"` with request for further field observations.
 
 ---
 
 ## 14. Advantages
-- **100% Explainable**: Complete reasoning trace available for every diagnosis.
-- **Zero Heavy Dependencies**: Runs instantly on any machine with Python and Flask.
-- **Deterministic**: No probabilistic hallucination or unpredictable outputs.
-- **Offline & API Dual Capability**: Works online via API or 100% offline via local JSON fallback.
+- **100% Explainable**: Complete reasoning trace and symptom breakdown for every diagnosis.
+- **No False Healthy Diagnoses**: Eliminates confusing `"Unknown / Healthy"` false negatives.
+- **Zero Heavy Dependencies**: Runs instantly on any machine with standard Python and Flask.
+- **Deterministic AI**: Keeps Forward Chaining as core mechanism while handling partial evidence gracefully.
 
 ---
 
-## 15. Limitations
-- Closed world assumption: Diseases outside the Knowledge Base cannot be identified.
-- Binary symptom matching without fuzzy severity ratings.
-
----
-
-## 16. Future Enhancements
-- Expand Knowledge Base to support additional crops (Maize, Wheat, Cotton).
-- Incorporate certainty factors or fuzzy logic for partial symptom confidence scores.
-- Add multi-language UI support for local farming communities.
-
----
-
-## 17. Conclusion
-The Crop Disease Expert System demonstrates that classical symbolic AI techniques like Forward Chaining remain highly effective, transparent, and practical for decision support tasks. By combining a clean inference engine with a dual API/JSON knowledge layer and a step-by-step reasoning UI, the project successfully fulfills all academic objectives for a Foundations of AI mini-project.
-
----
-
-## 18. References
-1. Prasad, R., & Babu, M. S. (2006). *An Expert System for Diagnosis of Plant Diseases*.
-2. Mahaman, B. D., et al. (2003). *Rule-Based Agricultural Expert System for Crop Protection*.
-3. Kolhe, S., et al. (2011). *Web-Based Expert System for Diagnosis of Wheat Diseases*.
-4. Buchanan, B. G., & Shortliffe, E. H. (1984). *Rule-Based Systems and Reasoning Traces*.
-5. Jones, J. W., & Pierce, F. J. (1997). *Expert Systems in Agriculture: A Survey of Paradigms*.
+## 15. Conclusion
+The updated Crop Disease Expert System demonstrates that classical symbolic AI techniques like Forward Chaining, when paired with simple candidate disease ranking fallbacks, provide a robust, practical, and fully explainable decision support system for agriculture.
