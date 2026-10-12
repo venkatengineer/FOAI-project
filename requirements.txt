@@ -1,2 +1,7 @@
-flask==3.0.3
-requests==2.32.3
+# Project 35: Crop Disease Expert System
+# Core Libraries specified for CLI Expert System:
+# - pandas (Structured Knowledge Base, Rule Indexing & DataFrame operations)
+# - pytest (Automated Unit Testing & Verification)
+
+pandas>=2.0.0
+pytest>=7.0.0

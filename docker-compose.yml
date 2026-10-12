@@ -1,0 +1,29 @@
+services:
+  # Primary Interactive CLI Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: crop-disease-expert-system:latest
+    container_name: crop-disease-expert-system-app
+    stdin_open: true
+    tty: true
+
+  # Benchmark Rice Demo Runner
+  demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: crop-disease-expert-system:latest
+    container_name: crop-disease-expert-system-demo
+    command: ["--demo"]
+
+  # Automated Test Suite Runner
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: crop-disease-expert-system:latest
+    container_name: crop-disease-expert-system-test
+    entrypoint: ["pytest"]
+    command: ["-v", "tests/test_inference.py"]
